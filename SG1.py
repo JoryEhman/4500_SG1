@@ -12,8 +12,12 @@ Group Members:
 
 External Resources used:
     - https://www.geeksforgeeks.org/python/python-try-except/
-        This was helpful in the design structure of the validateInt method. The rubric indicates the necessary
+        This was helpful in the design structure of the validateInt method. The rubric demands that different
+        cases should be handled if the user input for N and/or R are incorrect. The while loop needs to find and
+        check for cases such as A)is the value entered a number? if not, then we need to call it out B)If it is a number
+        then we need to check that it is an integer. C) Lastly, we need to check that the value is within the intended range
     - https://www.geeksforgeeks.org/python/python-string-isnumeric-method/
+        This link was also used for the above reasons. It was helpful in understanding how to check for if the value was "valid"
 """
 
 
@@ -44,12 +48,12 @@ def validateInt(min_value: int, max_value: int) -> int:
 
         try:
             number = float(user_input) #attempts to convert to a float
-        except ValueError: #If a value that cannot be converted to a float is found, error out
+        except ValueError: #If a value that cannot be converted to a float is found, error printed
             print("Error: Your input must be a number")
             print("Please enter a valid number:")
             continue
 
-        if not number.is_integer(): #Checks that the value number is actually a number, negative or not
+        if not number.is_integer(): #Checks that the value number is actually an integer, negative or not
             print("Error: Your input must be an integer")
             print("Please enter a valid number:")
             continue
