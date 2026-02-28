@@ -1,3 +1,4 @@
+# noinspection SpellCheckingInspection
 """
 Programming Language: Python 3.8.3
 Development Environment: PyCharm Community Edition (will test in Thonny)
@@ -20,11 +21,12 @@ External Resources used:
         This link was also used for the above reasons. It was helpful in understanding how to check for if the value was "valid"
 """
 
+import random
 
 # print_program() prints out the introduction message to users, explaining what will be asked of them, and what
 # they should expect to see as a result.
 def print_program() -> None:
-    programExplanation = (
+    program_explanation = (
         "This program simulates the class Pill Puzzle.\n"
         "\nYou start with N whole pills in a bottle. Each day, either a (W)hole or (H)alf pill\n"
         "will be chosen from the assortment of pills being stored in the \"magical pill bottle.\""
@@ -37,12 +39,12 @@ def print_program() -> None:
         "\nThis program illustrates interesting statistical phenomenon, by simulating many trials.\n"
         "")
 
-    print(programExplanation)
+    print(program_explanation)
 
 #validateInt is the function that validates user input at the start of the program. It takes in 2 arguments: min_value
 #and max_value. These values correspond to the range (inclusive) that the user's input should allow. The parameters
 #passed will be hardcoded in main, to correspond with the valid input values for N and R.
-def validateInt(min_value: int, max_value: int) -> int:
+def validate_int(min_value: int, max_value: int) -> int | None:
     while True:
         user_input = input() #Reads in user input (is a string)
 
@@ -69,10 +71,92 @@ def validateInt(min_value: int, max_value: int) -> int:
 
         return number #returns the now validated answer
 
+def run_all_simulations(N: int, R: int) -> None:
+
+    #final_whole_pill_tracker keeps a list of each day the final whole pill was removed from the bottle
+    final_whole_pill_tracker = []
+
+    #loops once for every simulation based on R simulations
+    for simulation in range(R):
+
+        #the number of whole pills left in the bottle
+        whole_pills = N
+
+        #the number of half pills left in the bottle
+        half_pills = 0
+
+        #how many days it took to empty the bottle of every whole_pill and half_pill
+        days_to_empty = 0
+
+        #flag for determining if the final whole pill was removed
+        final_whole_pill_taken = False
+
+        #loops until both half pills and whole pills are both fully removed
+        while whole_pills > 0 or half_pills > 0:
+
+            #this conditional checks for the existence of half pills and whole
+            #pills in the bottle to determine what choice of pill is available to remove
+            if whole_pills > 0 and half_pills > 0:
+                #makes use of the random.choices() function to weight whole pill or half pill heavier
+                #based on how many are left in the bottle
+                choice = random.choices(['whole', 'half'], [whole_pills, half_pills])[0]
+            elif whole_pills > 0:
+                choice = 'whole'
+            else:
+                choice = 'half'
+
+            #conditional to calculate what to do when either whole or half pill is chosen
+            if choice == 'whole':
+                whole_pills -= 1
+                half_pills += 1
+
+                # checks for the first time whole pills is 0 after taking a whole pill
+                #and tracks the day with the final_whole_pill_tracker
+                if whole_pills == 0 and final_whole_pill_taken == False:
+                    final_whole_pill_tracker.append(days_to_empty)
+                    final_whole_pill_taken = True
+
+            else:
+                half_pills -= 1
+
+            #increases by one each day until loop ends to track how many days
+            #each simulation takes to empty the entire bottle
+            days_to_empty += 1
+
+    create_histogram(final_whole_pill_tracker)
+
+#uses text based histogram to display some interesting analysis of what day the final pill
+#was removed from the bottle and how frequently it occurred across all the simulations
+def create_histogram(data):
+    occurrences = {}
+
+    #add one to the "value" for each final_day "key" occurrence
+    for final_day in data:
+        occurrences[final_day] = occurrences.get(final_day, 0) + 1
+
+    #sort the values in the occurrences dictionary before printing them out
+    sorted_days = sorted(occurrences)
+
+    #this section adds some limits to what can be displayed so the histogram
+    #does not extend too far outside the limits of the console
+    max_days = max(occurrences.values())
+    max_line_width = 50
+    scale = max(1, max_days // max_line_width)
+
+    print("\nHistogram: Day Last Whole Pill Removed")
+    print("Day | Frequency")
+    print("--------------------------------------------------")
+
+    #loops for each "key" in the sorted_days and prints a meaningful line to the console
+    #indicating how frequent the day the final pill was removed over all the simulations
+    for final_day in sorted_days:
+        print(f"{final_day} | {'#' * (occurrences[final_day] // scale)} ({occurrences[final_day]})")
+
 if __name__ == "__main__":
     print_program()
     print("Enter an integer N (1-1000):")
-    N = validateInt(1, 1000)
+    N = validate_int(1, 1000)
     print("Enter an integer R (1-10000):")
-    R = validateInt(1, 10000)
+    R = validate_int(1, 10000)
     print("You have selected for " + str(N) + " pills and " + str(R) + " simulations to be ran")
+    run_all_simulations(N, R)
