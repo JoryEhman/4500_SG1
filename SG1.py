@@ -20,6 +20,8 @@ External Resources used:
         This link was also used for the above reasons. It was helpful in understanding how to check for if the value was "valid"
 """
 
+# modules
+import random
 
 # print_program() prints out the introduction message to users, explaining what will be asked of them, and what
 # they should expect to see as a result.
@@ -76,3 +78,51 @@ if __name__ == "__main__":
     print("Enter an integer R (1-10000):")
     R = validateInt(1, 10000)
     print("You have selected for " + str(N) + " pills and " + str(R) + " simulations to be ran")
+
+#Simulations
+
+pill_bottle = [] #List where the 'pills' are stored
+W_count = N #Counts amount of whole pills in bottle
+H_count = 0 #Counts amount of half pills in bottle
+D = 0 #Number of days
+
+#Runs R simulations of emptying bottle
+i = 0 
+
+while i < R:
+
+    #Initializes list with N whole ('W') pills
+    for j in range(N):
+        pill_bottle.append('W')
+
+    #Simulates emptying bottle
+    while pill_bottle:
+        
+        #Picks pill randomly
+        current_pill = random.choice(pill_bottle)
+    
+        #If pill is whole, remove it and replace it with half a pill ('H')
+        if current_pill == 'W':
+            pill_bottle.remove('W')
+            pill_bottle.append('H')
+            W_count -= 1
+            H_count += 1
+        #If pill is half, remove it from the bottle
+        elif current_pill == 'H':
+            pill_bottle.remove('H')
+            H_count -= 1
+        
+        #Record the day
+        D += 1
+    
+    #Prints amount of days to empty whole bottle
+    print("It took " + str(D) + " days to empty the entire bottle.")
+    
+    #Resets the values for the next iteration
+    D = 0
+    W_count = N
+    H_count = 0
+    
+    i += 1 #Moves on to next iteration
+
+
