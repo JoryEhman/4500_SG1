@@ -71,10 +71,14 @@ def validate_int(min_value: int, max_value: int) -> int | None:
 
         return number #returns the now validated answer
 
-def run_all_simulations(N: int, R: int) -> None:
+def run_all_simulations(N: int, R: int, D: int) -> None:
 
     #final_whole_pill_tracker keeps a list of each day the final whole pill was removed from the bottle
     final_whole_pill_tracker = []
+
+    #Used the track and store the average number of whole pills and half pills at a given day for Q1
+    average_H = 0
+    average_W = 0
 
     #loops once for every simulation based on R simulations
     for simulation in range(R):
@@ -85,8 +89,9 @@ def run_all_simulations(N: int, R: int) -> None:
         #the number of half pills left in the bottle
         half_pills = 0
 
-        #how many days it took to empty the bottle of every whole_pill and half_pill
-        days_to_empty = 0
+        #how many days it took to empty the bottle of every whole_pill and half_pill,
+        #Changed days to empty to start at 1.
+        days_to_empty = 1
 
         #flag for determining if the final whole pill was removed
         final_whole_pill_taken = False
@@ -115,15 +120,22 @@ def run_all_simulations(N: int, R: int) -> None:
                 if whole_pills == 0 and final_whole_pill_taken == False:
                     final_whole_pill_tracker.append(days_to_empty)
                     final_whole_pill_taken = True
-
             else:
                 half_pills -= 1
+
+            #If the day is the user selected day, then it will add the current amount of whole pills and half pills
+            #into the variables to be stored for a later use.
+            if days_to_empty == D:
+                average_W += whole_pills
+                average_H += half_pills
 
             #increases by one each day until loop ends to track how many days
             #each simulation takes to empty the entire bottle
             days_to_empty += 1
 
+    print_day_average(average_W, average_H, R, D)
     create_histogram(final_whole_pill_tracker)
+
 
 #uses text based histogram to display some interesting analysis of what day the final pill
 #was removed from the bottle and how frequently it occurred across all the simulations
@@ -152,6 +164,21 @@ def create_histogram(data):
     for final_day in sorted_days:
         print(f"{final_day} | {'#' * (occurrences[final_day] // scale)} ({occurrences[final_day]})")
 
+
+#Function for Question 1, tracks the user selected day and provides
+def print_day_average(whole_pills:int, half_pills:int, R:int, D:int) -> None:
+
+    #Calculates the average pills for whole pills and half pills using the amount of
+    #pills stored and then dividing it by the amount of simulations done
+    whole_pills_average = whole_pills / R
+    half_pills_average = half_pills / R
+
+    #Prints out the expected values of whole pills and half pills at a user given day
+    print("On day: " , D , " the exepcted value of whole pills is: ", round(whole_pills_average))
+    print("On day: " , D , " the exepcted value of half pills is: ", round(half_pills_average))
+
+
+
 if __name__ == "__main__":
     print_program()
     print("Enter an integer N (1-1000):")
@@ -159,4 +186,10 @@ if __name__ == "__main__":
     print("Enter an integer R (1-10000):")
     R = validate_int(1, 10000)
     print("You have selected for " + str(N) + " pills and " + str(R) + " simulations to be ran")
-    run_all_simulations(N, R)
+
+    #Prompt User for day to be tracked
+    print("Enter a day to be tracked (1-" + str(N*2) + "):")
+    D = validate_int(1, (2*N))
+
+
+    run_all_simulations(N, R, D)
