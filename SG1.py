@@ -132,7 +132,6 @@ def run_all_simulations(N: int, R: int, D: int) -> None:
             #increases by one each day until loop ends to track how many days
             #each simulation takes to empty the entire bottle
             days_to_empty += 1
-
     print_day_average(average_W, average_H, R, D)
     create_histogram(final_whole_pill_tracker)
 
@@ -174,8 +173,11 @@ def print_day_average(whole_pills:int, half_pills:int, R:int, D:int) -> None:
     half_pills_average = half_pills / R
 
     #Prints out the expected values of whole pills and half pills at a user given day
+    print("\nExpected values")
+    print("--------------------------------------------------")
     print("On day: " , D , " the exepcted value of whole pills is: ", round(whole_pills_average))
     print("On day: " , D , " the exepcted value of half pills is: ", round(half_pills_average))
+    print("--------------------------------------------------")
 
 
 
