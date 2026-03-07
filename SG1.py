@@ -19,6 +19,10 @@ External Resources used:
         then we need to check that it is an integer. C) Lastly, we need to check that the value is within the intended range
     - https://www.geeksforgeeks.org/python/python-string-isnumeric-method/
         This link was also used for the above reasons. It was helpful in understanding how to check for if the value was "valid"
+    - https://www.geeksforgeeks.org/python/python-string-strip/
+    - https://www.geeksforgeeks.org/python/python-string-lower/
+        Both of these articles/pages were necessary for validating the user's input in relation to the while loop that
+        checks if the user wishes to continue the program or to exit.
 """
 
 import random
@@ -180,13 +184,37 @@ def print_day_average(whole_pills:int, half_pills:int, R:int, D:int) -> None:
 
 if __name__ == "__main__":
     print_program()
-    print("Enter an integer N (1-1000):")
-    N = validate_int(1, 1000)
-    print("Enter an integer R (1-10000):")
-    R = validate_int(1, 10000)
-    print("You have selected for " + str(N) + " pills and " + str(R) + " simulations to be ran")
-    # Prompt User for day to be tracked
-    print("Enter a day to be tracked (1-" + str(N * 2) + "):")
-    D = validate_int(1, (2 * N))
+    programCounter = 1 #Variable to track how many times the user has decided on running the program
 
-    run_all_simulations(N, R, D)
+    while True:
+        #Prints out the number of times the user has run through the program
+        if programCounter > 0:
+            print("\nWelcome Back! You are on iteration " + str(programCounter) + " of this program!")
+
+        #Will Create functionality of allowing user to repeat Simulations. Will give user option to quit program
+        print("Enter an integer N (1-1000):")
+        N = validate_int(1, 1000)
+        print("Enter an integer R (1-10000):")
+        R = validate_int(1, 10000)
+        print("You have selected for " + str(N) + " pills and " + str(R) + " simulations to be ran")
+        # Prompt User for day to be tracked
+        print("Enter a day to be tracked (1-" + str(N * 2) + "):")
+        D = validate_int(1, (2 * N))
+
+        run_all_simulations(N, R, D)
+
+        #Print to the user the options for continuing or exiting. Store the cleaned result (whitespace removed and lowercase)
+        program_choice = input("\nWould you like to run another simulation? Enter Continue or Exit: \n").strip().lower()
+
+        #If the user's input does not match, continue prompting user for either "continue" or "exit"
+        while program_choice != "continue" and program_choice != "exit":
+            program_choice = input("Please enter Continue or Exit: ").strip().lower()
+        #if exit string was found, exit the program
+        if program_choice == "exit":
+            print("Program is ending!")
+            break
+        #if continue was found, increment iteration count and re-loop through the program
+        if program_choice == "continue":
+            programCounter += 1
+            continue
+    #Program Exited
