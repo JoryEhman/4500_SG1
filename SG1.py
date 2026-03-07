@@ -76,9 +76,10 @@ def run_simulations(N:int, R: int):
     W_count = N #Counts amount of whole pills in bottle
     H_count = 0 #Counts amount of half pills in bottle
     D = 0 #Number of days
+    half_and_half = False #Boolean to record equal amount of pills only once
     
     #Runs R simulations of emptying bottle
-    i = 0 
+    i = 0
 
     while i < R:
 
@@ -102,12 +103,28 @@ def run_simulations(N:int, R: int):
             elif current_pill == 'H':
                 pill_bottle.remove('H')
                 H_count -= 1
+                
+            #Q3. Record the day where H & W are equal amounts
+            if (half_and_half == False):
+                if (pill_bottle.count('H') == pill_bottle.count('W') 
+                & pill_bottle.count('W') != 0):
+                    equal_W_and_H = D
+                    equal_W = pill_bottle.count('W')
+                    equal_H = pill_bottle.count('H')
+                    half_and_half = True
         
-            #Record the day
+            #Move on to the next day
             D += 1
     
         #Prints amount of days to empty whole bottle
         print("It took " + str(D) + " days to empty the entire bottle.")
+        
+        #Prints the day the pills were perfectly half & half (Q3)
+        if (half_and_half == True):
+            print("On day " + str(equal_W_and_H) + ", there were an equal amount of whole and half pills in the bottle.")
+            print("(" + str(equal_W) + " to " + str(equal_H) + ")")
+        else:
+            print("There was no day where the bottle had equal amount of whole pills and half pills.")
     
         #Resets the values for the next iteration
         D = 0
@@ -115,7 +132,6 @@ def run_simulations(N:int, R: int):
         H_count = 0
     
         i += 1 #Moves on to next iteration
-    
 
 if __name__ == "__main__":
     print_program()
@@ -126,5 +142,3 @@ if __name__ == "__main__":
     print("You have selected for " + str(N) + " pills and " + str(R) + " simulations to be ran")
     
     run_simulations(N, R)
-    
-    
