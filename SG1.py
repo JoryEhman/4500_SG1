@@ -75,6 +75,37 @@ def validate_int(min_value: int, max_value: int) -> int | None:
 
         return number #returns the now validated answer
 
+#Displays simulation progress so the user knows the program is still running.
+#Also gives the current average day when the last whole pill was removed.
+def display_progress(current_simulation: int, total_simulations: int, final_whole_pill_tracker: list) -> None:
+
+    #current_simulation (int): The current simulation number.
+    #total_simulations (int): Total number of simulations to run.
+    # final_whole_pill_tracker (list): Stores the day the last whole pill was removed for completed simulations.
+
+    #Print progress every 10% of completion
+    interval = max(1, total_simulations // 10)
+
+    # Print header once at start
+    if current_simulation == 0:
+        print("\nProgress")
+        print("--------------------------------------------------")
+
+    #Logic for printing every 10%
+    if current_simulation % interval == 0 and current_simulation != 0:
+        percent = round(((current_simulation + 1) / total_simulations) * 100)
+        print(f"\nSimulation progress: {percent}% ({current_simulation + 1}/{total_simulations})")
+
+        #the current average day when the last whole pill was removed
+        if len(final_whole_pill_tracker) > 0:
+            running_average = sum(final_whole_pill_tracker) / len(final_whole_pill_tracker)
+            print(f"Current average day the last whole pill was removed: {round(running_average, 2)}")
+
+    # Completion message
+    if current_simulation == total_simulations - 1:
+        print("\nSimulation progress: 100% complete.")
+        print("--------------------------------------------------")
+
 def run_all_simulations(N: int, R: int, D: int) -> None:
 
     #final_whole_pill_tracker keeps a list of each day the final whole pill was removed from the bottle
@@ -86,6 +117,9 @@ def run_all_simulations(N: int, R: int, D: int) -> None:
 
     #loops once for every simulation based on R simulations
     for simulation in range(R):
+
+        #Display progress of simulation in percentage format
+        display_progress(simulation, R, final_whole_pill_tracker)
 
         #the number of whole pills left in the bottle
         whole_pills = N
@@ -177,8 +211,8 @@ def print_day_average(whole_pills:int, half_pills:int, R:int, D:int) -> None:
     #Prints out the expected values of whole pills and half pills at a user given day
     print("\nExpected values")
     print("--------------------------------------------------")
-    print("On day: " , D , " the exepcted value of whole pills is: ", round(whole_pills_average))
-    print("On day: " , D , " the exepcted value of half pills is: ", round(half_pills_average))
+    print("On day: " , D , " the expected value of whole pills is: ", round(whole_pills_average))
+    print("On day: " , D , " the expected value of half pills is: ", round(half_pills_average))
     print("--------------------------------------------------")
 
 
